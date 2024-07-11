@@ -1,0 +1,80 @@
+<form [formGroup]="userForm">
+  <div class="row">
+    <div class="form-group col-md-6">
+      <label for="nome">Nome: </label>
+      <input
+        id="nome"
+        type="text"
+        class="form-control"
+        [class.is-invalid]="
+          userForm.get('nome')?.errors && userForm.get('nome')?.touched
+        "
+        formControlName="nome"
+      />
+      <div
+        *ngIf="userForm.get('nome')?.hasError('required')"
+        class="invalid-feedback"
+      >
+        O campo 'Nome' é obrigatório
+      </div>
+      <div
+        *ngIf="userForm.get('nome')?.hasError('maxlength')"
+        class="invalid-feedback"
+      >
+        Número de caracteres excedido.
+      </div>
+    </div>
+    <div class="form-group col-md-3">
+      <label for="idade">Idade: </label>
+      <input
+        id="idade"
+        type="number"
+        class="form-control"
+        [class.is-invalid]="
+          userForm.get('idade')?.errors && userForm.get('idade')?.touched
+        "
+        formControlName="idade"
+      />
+      <div
+        *ngIf="userForm.get('idade')?.hasError('required')"
+        class="invalid-feedback"
+      >
+        O campo 'Idade' é obrigatório
+      </div>
+      <div
+        *ngIf="
+          userForm.get('idade')?.hasError('max') ||
+          userForm.get('idade')?.hasError('min')
+        "
+        class="invalid-feedback"
+      >
+        Idade deve ser entre 12 e 110
+      </div>
+    </div>
+  </div>
+  <button
+    [disabled]="!userForm.valid"
+    (click)="submitForm()"
+    class="btn btn-success mt-3"
+  >
+    Inserir
+  </button>
+</form>
+
+<div class="row mt-3">
+  <app-user-card
+    (userInfo)="infoUserSelecionado($event)"
+    *ngFor="let user of users"
+    [user]="user"
+    class="col-md-3 mt-3"
+  ></app-user-card>
+</div>
+
+<div *ngIf="userSelecionado" class="mt-3 border col-md p-3">
+  <h2>Usuário selecionado</h2>
+  <p>Nome: {{ userSelecionado.nome }}</p>
+  <p>Idade: {{ userSelecionado.idade }}</p>
+  <button (click)="fecharInfoUserSelecionado()" class="btn btn-danger">
+    Fechar
+  </button>
+</div>
